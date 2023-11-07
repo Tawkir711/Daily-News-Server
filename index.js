@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config()
 const app = express();
 const port = process.env.PORT || 5000;
@@ -28,6 +28,7 @@ async function run() {
     await client.connect();
 
     const blogCollection = client.db('blogPage').collection('dailyNews')
+    const postCollection = client.db('blogPage').collection('postBlog')
 
     app.get('/recentBlog', async (req, res) => {
       const cursor = blogCollection.find();
@@ -35,7 +36,27 @@ async function run() {
       res.send(result);
     })
 
-    
+    app.post('/addBlog', async (req, res) => {
+      const addPost = req.body;
+      const result = await blogCollection.insertOne(addPost);
+      res.send(result)
+    })
+
+    app.get('/blogs', async (req, res) => {
+      const blog = blogCollection.find().sort({ startDate: -1 }).limit(6)
+      const result = await blog.toArray()
+      res.send(result)
+    })
+
+
+    app.get('/blogs/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await blogCollection.findOne(query)
+      res.send(result)
+    })
+
+   
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
