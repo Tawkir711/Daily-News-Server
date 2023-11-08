@@ -30,7 +30,7 @@ async function run() {
     const blogCollection = client.db('blogPage').collection('dailyNews')
     const postCollection = client.db('blogPage').collection('postBlog')
 
-    app.get('/recentBlog', async (req, res) => {
+    app.get('/allBlog', async (req, res) => {
       const cursor = blogCollection.find();
       const result = await cursor.toArray();
       res.send(result);
@@ -56,7 +56,38 @@ async function run() {
       res.send(result)
     })
 
-   
+    
+    app.get('/users', async (req, res) => {
+      let query = {};
+      if (req.query.email) {
+        query={email : req.query.email}
+      }
+      const result = await postCollection.find(query).toArray();
+      res.send(result);
+    })
+
+    app.get('/wishlist2', async (req, res) => {
+      const cursor = postCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
+    app.post('/wishlist2', async (req, res) => {
+      const wish = req.body;
+      const result = await postCollection.insertOne(wish);
+      res.send(result);
+    })
+
+
+    app.delete('/wishlist2/:id', async (req, res) => {
+      const id = req.params.id
+      console.log(id);
+      const query = { _id: id }
+      const result = await CartCollection.deleteOne(query)
+      res.send(result)
+      console.log(result)
+    })
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
