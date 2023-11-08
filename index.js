@@ -36,6 +36,13 @@ async function run() {
       res.send(result);
     })
 
+    app.get('/allBlog/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await blogCollection.findOne(query)
+      res.send(result)
+    })
+
     app.post('/addBlog', async (req, res) => {
       const addPost = req.body;
       const result = await blogCollection.insertOne(addPost);
@@ -57,14 +64,14 @@ async function run() {
     })
 
     
-    app.get('/users', async (req, res) => {
-      let query = {};
-      if (req.query.email) {
-        query={email : req.query.email}
-      }
-      const result = await postCollection.find(query).toArray();
-      res.send(result);
-    })
+    // app.get('/users', async (req, res) => {
+    //   let query = {};
+    //   if (req.query.email) {
+    //     query={email : req.query.email}
+    //   }
+    //   const result = await postCollection.find(query).toArray();
+    //   res.send(result);
+    // })
 
     app.get('/wishlist2', async (req, res) => {
       const cursor = postCollection.find();
