@@ -70,14 +70,15 @@ async function run() {
     })
 
     
-    // app.get('/users', async (req, res) => {
-    //   let query = {};
-    //   if (req.query.email) {
-    //     query={email : req.query.email}
-    //   }
-    //   const result = await postCollection.find(query).toArray();
-    //   res.send(result);
-    // })
+    app.get('/wishlist2', async (req, res) => {
+      console.log(req.query.email);
+      let query = {};
+      if (req.query?.email) {
+        query= {email: req.query.email}
+      }
+      const result = await postCollection.find(query).toArray();
+      res.send(result);
+    })
 
     app.get('/wishlist2', async (req, res) => {
       const cursor = postCollection.find();
