@@ -63,6 +63,12 @@ async function run() {
       res.send(result)
     })
 
+    app.get('/featuredBlog', async (req, res) => {
+      const cursor = blogCollection.find().limit(10);
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
     
     // app.get('/users', async (req, res) => {
     //   let query = {};
